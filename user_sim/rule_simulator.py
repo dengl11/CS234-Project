@@ -41,7 +41,7 @@ class RuleSimulator(UserSimulator):
         
         self.goal = self._sample_goal(self.start_set)
         self.goal['request_slots']['ticket'] = 'UNK'
-        self.constraint_check = UserConfig.CONSTRAINT_CHECK_FAILURE
+        self.constraint_check = DlgManagerConfig.CONSTRAINT_CHECK_FAILURE
         
         # sample first action
         user_action = self._sample_action()
@@ -276,7 +276,7 @@ class RuleSimulator(UserSimulator):
         if 'taskcomplete' in system_action['inform_slots'].keys(): # check all the constraints from agents with user goal
             self.state['diaact'] = "thanks"
             #if 'ticket' in self.state['rest_slots']: self.state['request_slots']['ticket'] = 'UNK'
-            self.constraint_check = UserConfig.CONSTRAINT_CHECK_SUCCESS
+            self.constraint_check = DlgManagerConfig.CONSTRAINT_CHECK_SUCCESS
                     
             if system_action['inform_slots']['taskcomplete'] == NlgConfig.NO_VALUE_MATCH:
                 self.state['hist_slots']['ticket'] = NlgConfig.NO_VALUE_MATCH
@@ -289,7 +289,7 @@ class RuleSimulator(UserSimulator):
                     self.state['diaact'] = "deny"
                     self.state['request_slots'].clear()
                     self.state['inform_slots'].clear()
-                    self.constraint_check = UserConfig.CONSTRAINT_CHECK_FAILURE
+                    self.constraint_check = DlgManagerConfig.CONSTRAINT_CHECK_FAILURE
                     break
         else:
             for slot in system_action['inform_slots'].keys():

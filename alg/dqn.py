@@ -35,7 +35,7 @@ class DQN:
         
         hidden_size = self.model['Wd'].shape[0] # size of hidden layer
         H = np.zeros((1, hidden_size)) # hidden layer representation
-        
+        # print(active_func)
         if active_func == 'sigmoid':
             H = 1/(1+np.exp(-Xsh))
         elif active_func == 'tanh':
@@ -129,7 +129,7 @@ class DQN:
         tYs = []
         
         for i,x in enumerate(batch):
-            Xs = x[0]
+            Xs = x[0] # [1, 252]
             Y, out_cache = self.fwdPass(Xs, params, predict_mode = predict_mode)
             caches.append(out_cache)
             Ys.append(Y)

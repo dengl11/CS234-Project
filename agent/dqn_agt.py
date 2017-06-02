@@ -151,6 +151,7 @@ class AgentDQN(Agent):
       
     def run_policy(self, representation):
         """ epsilon-greedy policy """
+        print(representation.shape)
         
         if random.random() < self.epsilon:
             return random.randint(0, self.num_actions - 1)
