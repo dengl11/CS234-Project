@@ -38,3 +38,15 @@ def draw_learning_curve(numbers, size = (24, 8)):
     plt.plot(numbers, 'r', lw=1)
     # plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
     plt.show()
+
+
+def draw_loss_curve(numbers, size = (24, 8)):
+    plt.figure(figsize=size)
+    plt.xlabel('Simulation Epoch', fontSize=18)
+    plt.ylabel('Loss', fontSize=18)
+    plt.title('Loss Curve', fontSize=20)
+    plt.grid(True)
+
+    plt.plot(numbers, 'r', lw=1)
+    # plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
+    plt.show()

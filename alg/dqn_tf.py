@@ -27,7 +27,7 @@ class DQNTF(object):
         self.logger = logger if logger else get_logger(self.config.log_path)
 
         self.gamma = params.get('gamma', 0.9)
-        self.learning_rate = params.get('learning_rate', 1e-3)
+        self.learning_rate = self.config.lr
         self.beta = params.get('beta', 0.999)
 
         self.input_size = input_size
@@ -147,7 +147,6 @@ class DQNTF(object):
         }
         self.sess.run([self.train_step], dic)
         loss = self.sess.run(self.loss, dic)
-        # print("Global norm: {}".format(self.sess.run(self.grad_norm, dic)))
         return loss
 
 
