@@ -50,29 +50,10 @@ class DQNAgentTF(AgentDQN):
                     self.warm_start = 2
                 return self.rule_policy()
             else:
-                return self.model.predict_action(representation, {}, predict_model=True)
-    
-    def rule_policy(self):
-        """ Rule Policy """
-        
-        if self.current_slot_id < len(self.request_set):
-            slot = self.request_set[self.current_slot_id]
-            self.current_slot_id += 1
-
-            act_slot_response = {}
-            act_slot_response['diaact'] = "request"
-            act_slot_response['inform_slots'] = {}
-            act_slot_response['request_slots'] = {slot: "UNK"}
-        elif self.phase == 0:
-            act_slot_response = {'diaact': "inform", 'inform_slots': {'taskcomplete': "PLACEHOLDER"}, 'request_slots': {} }
-            self.phase += 1
-        elif self.phase == 1:
-            act_slot_response = {'diaact': "thanks", 'inform_slots': {}, 'request_slots': {} }
-                
-        return self.action_index(act_slot_response)
+                return self.model.predict_action(representation)
     
     
-    def train(self, batch_size=1, num_batches=100, show_every=100):
+    def train(self, batch_size=1, num_batches=100, show_every=1):
         """ Train DQN with experience replay """
         assert len(self.experience_replay_pool)>0, "No Experience Replay!"
         print("Train on : {}".format(len(self.experience_replay_pool)))
@@ -82,8 +63,12 @@ class DQNAgentTF(AgentDQN):
                 batch = [random.choice(self.experience_replay_pool) for i in range(batch_size)]
                 loss = self.model.train_batch(batch)
                 self.cur_bellman_err += loss
-            
+            # after every batch update target q
+            # self.model.update_target_params()
             if iter_batch%show_every==0: print("cur bellman err %.4f, experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
+            # if iter_batch%DQNTfConfig.save_every==0: 
+            #     self.model.save()
+            #     print("Model saved!")
             
             
     

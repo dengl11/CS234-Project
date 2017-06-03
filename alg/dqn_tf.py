@@ -18,29 +18,29 @@ class DQNTF(object):
         Args:
             logger: logger instance from logging module
         """
-        config = DQNTfConfig
+        self.config = DQNTfConfig
         # directory for training outputs
-        if not os.path.exists(config.output_path):
-            os.makedirs(config.output_path)
+        if not os.path.exists(self.config.output_path):
+            os.makedirs(self.config.output_path)
             
         # store hyper params
-        self.logger = logger if logger else get_logger(config.log_path)
+        self.logger = logger if logger else get_logger(self.config.log_path)
 
         self.gamma = params.get('gamma', 0.9)
         self.learning_rate = params.get('learning_rate', 1e-3)
-        self.beta = params.get('beta', 0.9)
-        self.grad_clip = params.get('grad_clip', -1e-3)
+        self.beta = params.get('beta', 0.999)
 
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
 
         self.build_model()
+        self.saver = tf.train.Saver()
         
 
     def build_model(self):
         tf.reset_default_graph()
-        self.sess = tf.Session()
+        self.sess        = tf.Session()
         self.states      = tf.placeholder(tf.float32, shape=(None, self.input_size))
         self.next_states = tf.placeholder(tf.float32, shape=(None, self.input_size))
         self.done_mask   = tf.placeholder(tf.bool, shape=(None))
@@ -49,10 +49,35 @@ class DQNTF(object):
         self.q           = self.get_q_values(self.states, "q")
         self.target_q    = self.get_q_values(self.states, "target_q")
         self.loss        = self.get_loss(self.q, self.target_q)
-        optimizer        = get_solver_adam(self.learning_rate, self.beta)
-        self.train_step  = optimizer.minimize(self.loss)
+        self.set_train_step("q")
+        self.set_update_step("q", "target_q")
         self.sess.run(tf.global_variables_initializer())
 
+
+
+    def set_train_step(self, scope):
+        trainable_var_key = tf.GraphKeys.TRAINABLE_VARIABLES
+        optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate, beta1 = self.beta)
+        xs = tf.get_collection(key=trainable_var_key, scope=scope)
+        with tf.variable_scope("loss"):
+            grad_var_list = optimizer.compute_gradients(self.loss, xs)
+            gradients = [x[0] for x in grad_var_list]
+            if self.config.grad_clip:
+                gradients = [tf.clip_by_norm(g, self.config.clip_val) for g in gradients]
+            self.train_step = optimizer.apply_gradients([(gradients[i], xs[i]) for i in range(len(xs))])
+
+
+    def set_update_step(self, q_scope, target_q_scope):
+        trainable_var_key = tf.GraphKeys.TRAINABLE_VARIABLES
+        q = tf.get_collection(key=trainable_var_key, scope=q_scope)
+        q_target = tf.get_collection(key=trainable_var_key, scope=target_q_scope)
+        all_assignments = [tf.assign(q_target[i], q[i]) for i in range(len(q))]
+        self.update_step = tf.group(*all_assignments)
+
+
+    def get_weights(self, scope):
+        with tf.variable_scope(scope, reuse=True):
+            return tf.get_variable("dense/kernel")
 
     def get_loss(self, q, target_q):
         """
@@ -67,9 +92,16 @@ class DQNTF(object):
         gamma = self.gamma
         Q_samp = self.rewards + gamma * tf.multiply(max_q, not_done) # [batch_size]
         q_extracted = tf.reduce_sum(tf.multiply(tf.one_hot(indices=self.actions, depth=self.output_size), q), axis=1)
-        with tf.variable_scope("loss"):
-            return tf.reduce_mean(tf.square(q_extracted - Q_samp)) # scalar
+        W1 = self.get_weights("q")
+        W2 = self.get_weights("target_q")
+        reg = self.config.reg
+        with tf.variable_scope("loss") as scope:
+            loss = tf.reduce_mean(tf.square(q_extracted - Q_samp)) # scalar
+            loss += reg * tf.norm(W1)**2
+            loss += reg * tf.norm(W2)**2
+            return loss
         
+            
 
 
 
@@ -90,7 +122,7 @@ class DQNTF(object):
         with tf.variable_scope(scope):
             x = state
             x = tf.layers.dense(x, hidden_size, activation=tf.nn.relu)
-            x = tf.layers.dense(x, output_size, activation=tf.nn.relu)
+            x = tf.layers.dense(x, output_size, activation=None)
             return x
 
 
@@ -113,12 +145,33 @@ class DQNTF(object):
             self.rewards:       rewards,
             self.actions:       actions
         }
-        self.sess.run(self.train_step, dic)
+        self.sess.run([self.train_step], dic)
         loss = self.sess.run(self.loss, dic)
+        # print("Global norm: {}".format(self.sess.run(self.grad_norm, dic)))
         return loss
 
 
-    def predict_action():
+
+    def update_target_params(self):
+        self.sess.run(self.update_step)
+        
+        
+    def predict_action(self, states):
         """
+        Input:
+            states: [batch_size, ?]
+        Output:
+            actions: [batch_size]
         """
-        pass
+        action_values = self.sess.run(self.q, feed_dict={self.states: states})[0]
+        return np.argmax(action_values)
+
+    def save(self):
+        """
+        Saves session
+        """
+        if not os.path.exists(self.config.model_output):
+            os.makedirs(self.config.model_output)
+
+        self.saver.save(self.sess, self.config.model_output)
+

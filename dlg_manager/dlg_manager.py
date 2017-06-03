@@ -10,7 +10,10 @@ class DlgManager:
         self.slot_set   = slot_set
         self.movie_dict = movie_dict
         self.state_tracker = StateTracker(act_set, slot_set, movie_dict)
-    
+        self.reward = 0
+        self.episode_done = False
+
+        
     def init_episode(self):
         """ 
         Refresh state for new dialog 
@@ -21,11 +24,11 @@ class DlgManager:
         self.user_action = self.user.init_episode()
         self.state_tracker.update(user_action = self.user_action)
         self.agent.init_episode()
-        if NlgConfig.run_mode < 3:
-            pass
-#             print ("New episode, user goal:")
-#             print(json.dumps(self.user.goal, indent=2))
-#         self.print_function(user_action = self.user_action)
+#         if NlgConfig.run_mode < 3:
+#             pass
+# #             print ("New episode, user goal:")
+# #             print(json.dumps(self.user.goal, indent=2))
+# #         self.print_function(user_action = self.user_action)
         
     def print_function(self, agent_action=None, user_action=None):
         """ Print Function """

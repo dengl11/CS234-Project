@@ -239,7 +239,6 @@ class DQN:
         
         cost = cg['cost']
         grads = cg['grads']
-        
         # clip gradients if needed
         if activation_func.lower() == 'relu':
             if grad_clip > 0:
@@ -249,6 +248,7 @@ class DQN:
                         grads[p] = np.maximum(grads[p], -grad_clip)
         
         # perform parameter update
+        # print("learning_rate = ", learning_rate)
         for p in self.update:
             if p in grads:
                 if sdg_type == 'vanilla':
@@ -272,7 +272,12 @@ class DQN:
     
     """ prediction """
     def predict(self, Xs, params, **kwargs):
+        """
+        Input:
+            Xs: [1, 252]
+        """
+        # print("------------ Predict! ------------ ")
         Ys, caches = self.fwdPass(Xs, params, predict_model=True)
         pred_action = np.argmax(Ys)
-        
+        # print("Predict: {}".format(pred_action))
         return pred_action

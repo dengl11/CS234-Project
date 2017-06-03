@@ -3,7 +3,7 @@ from config import *
 from alg import *
 import copy, argparse, json, random
 import numpy as np
-
+from six.moves import cPickle as pickle
 
 
 class AgentDQN(Agent):
@@ -66,7 +66,6 @@ class AgentDQN(Agent):
     
     def prepare_state_representation(self, state):
         """ Create the representation for each state """
-        
         user_action = state['user_action']
         current_slots = state['curr_slots']
         kb_results_dict = state['kb_results']
@@ -150,9 +149,13 @@ class AgentDQN(Agent):
         return self.final_representation
       
     def run_policy(self, representation):
-        """ epsilon-greedy policy """
-        print(representation.shape)
-        
+        """ 
+        epsilon-greedy policy 
+        Input: 
+            representation: (1, 252)
+        """
+
+
         if random.random() < self.epsilon:
             return random.randint(0, self.num_actions - 1)
         else:
@@ -206,7 +209,7 @@ class AgentDQN(Agent):
         else: # Prediction Mode
             self.experience_replay_pool.append(training_example)
     
-    def train(self, batch_size=1, num_batches=100, show_every=100):
+    def train(self, batch_size=1, num_batches=100, show_every=1):
         """ Train DQN with experience replay """
         assert len(self.experience_replay_pool)>0, "No Experience Replay!"
         print("Train on : {}".format(len(self.experience_replay_pool)))
@@ -218,6 +221,7 @@ class AgentDQN(Agent):
                 self.cur_bellman_err += batch_struct['cost']['total_cost']
             
             if iter_batch%show_every==0: print("cur bellman err %.4f, experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
+        return self.cur_bellman_err
             
             
     ################################################################################
@@ -225,7 +229,6 @@ class AgentDQN(Agent):
     ################################################################################
     def save_experience_replay_to_file(self, path):
         """ Save the experience replay pool to a file """
-        
         try:
             pickle.dump(self.experience_replay_pool, open(path, "wb"))
             print('saved model in %s' % (path, ))
@@ -235,14 +238,13 @@ class AgentDQN(Agent):
     
     def load_experience_replay_from_file(self, path):
         """ Load the experience replay pool from a file"""
-        
         self.experience_replay_pool = pickle.load(open(path, 'rb'))
     
              
     def load_trained_DQN(self, path):
         """ Load the trained DQN from a file """
         
-        trained_file = pickle.load(open(path, 'rb'))
+        trained_file = pickle.load(open(path, 'rb'), encoding="latin1")
         model = trained_file['model']
         
         print("trained DQN Parameters:", json.dumps(trained_file['params'], indent=2))

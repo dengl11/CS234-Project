@@ -35,5 +35,6 @@ def draw_learning_curve(numbers, size = (24, 8)):
     plt.title('Learning Curve', fontSize=20)
     plt.grid(True)
 
-    plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
+    plt.plot(numbers, 'r', lw=1)
+    # plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
     plt.show()
