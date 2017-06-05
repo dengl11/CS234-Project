@@ -4,6 +4,7 @@ import math
 
 def initWeight(n,d):
     scale_factor = math.sqrt(float(6)/(n + d))
+    print("scale_factor:", scale_factor)
     #scale_factor = 0.1
     return (np.random.rand(n,d)*2-1)*scale_factor
 

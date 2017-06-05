@@ -220,7 +220,7 @@ class AgentDQN(Agent):
                 batch_struct = self.dqn.singleBatch(batch, {'gamma': self.gamma}, self.clone_dqn)
                 self.cur_bellman_err += batch_struct['cost']['total_cost']
             
-            if iter_batch%show_every==0: print("cur bellman err %.4f, experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
+            if iter_batch%show_every==0: print("cur bellman err [%.4f], experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
         return self.cur_bellman_err
             
             

@@ -63,10 +63,10 @@ class DQNAgentTF(AgentDQN):
                 batch = [random.choice(self.experience_replay_pool) for i in range(batch_size)]
                 loss = self.model.train_batch(batch)
                 self.cur_bellman_err += loss
-        return self.cur_bellman_err
             # after every batch update target q
             # self.model.update_target_params()
-            if iter_batch%show_every==0: print("cur bellman err %.4f, experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
+            if iter_batch%show_every==0: print("- cur bellman err %.4f, experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
+        return self.cur_bellman_err
             # if iter_batch%DQNTfConfig.save_every==0: 
             #     self.model.save()
             #     print("Model saved!")

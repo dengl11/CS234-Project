@@ -8,5 +8,5 @@ class DQNTfConfig:
     grad_clip    = False
     clip_val     = 10
     save_every   = 100 # in batch
-    reg          = 1e-6
-    lr           = 5e-4
+    reg          = 1e-3
+    lr           = 1e-3

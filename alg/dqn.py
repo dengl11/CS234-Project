@@ -7,10 +7,13 @@ class DQN:
         self.model = {}
         # input-hidden
         self.model['Wxh'] = initWeight(input_size, hidden_size)
+        print("wh=", np.linalg.norm(self.model['Wxh']))
         self.model['bxh'] = np.zeros((1, hidden_size))
       
         # hidden-output
-        self.model['Wd'] = initWeight(hidden_size, output_size)*0.1
+        self.model['Wd'] = initWeight(hidden_size, output_size)
+        # self.model['Wd'] = initWeight(hidden_size, output_size)*0.1
+        print("wd=", np.linalg.norm(self.model['Wd']))
         self.model['bd'] = np.zeros((1, output_size))
 
         self.update = ['Wxh', 'bxh', 'Wd', 'bd']
@@ -162,19 +165,22 @@ class DQN:
     def costFunc(self, batch, params, clone_dqn):
         regc = params.get('reg_cost', 1e-3)
         gamma = params.get('gamma', 0.9)
+        # gamma = 0.9, regc = 1e-3 
+        # print("regc = {} | gamma = {}".format(regc, gamma))
         
         # batch forward
         Ys, caches, tYs = self.batchDoubleForward(batch, params, clone_dqn, predict_mode = False)
         
         loss_cost = 0.0
         dYs = []
+        print(batch[0][2])
+        print("rewards:", [x[2] for x in batch])
         for i,x in enumerate(batch):
             Y = Ys[i]
             nY = tYs[i]
             
             action = np.array(x[1], dtype=int)
             reward = np.array(x[2], dtype=float)
-            
             n_action = np.nanargmax(nY[0])
             max_next_y = nY[0][n_action]
             
@@ -186,8 +192,10 @@ class DQN:
             pred_y = Y[0][action]
             
             nY = np.zeros(nY.shape)
+            # print(nY.shape)
             nY[0][action] = target_y
             Y = np.zeros(Y.shape)
+            # print(action)
             Y[0][action] = pred_y
             
             # Cost Function
@@ -226,6 +234,7 @@ class DQN:
         learning_rate = params.get('learning_rate', 0.001)
         decay_rate = params.get('decay_rate', 0.999)
         momentum = params.get('momentum', 0.1)
+        print('momentum=', momentum)
         grad_clip = params.get('grad_clip', -1e-3)
         smooth_eps = params.get('smooth_eps', 1e-8)
         sdg_type = params.get('sdgtype', 'rmsprop')
@@ -241,6 +250,7 @@ class DQN:
         grads = cg['grads']
         # clip gradients if needed
         if activation_func.lower() == 'relu':
+            # print("grad_clip = ", grad_clip) -1e-3
             if grad_clip > 0:
                 for p in self.update:
                     if p in grads:
@@ -249,6 +259,7 @@ class DQN:
         
         # perform parameter update
         # print("learning_rate = ", learning_rate)
+        # print(sdg_type)  rmsprop
         for p in self.update:
             if p in grads:
                 if sdg_type == 'vanilla':
