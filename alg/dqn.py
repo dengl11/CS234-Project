@@ -11,8 +11,8 @@ class DQN:
         self.model['bxh'] = np.zeros((1, hidden_size))
       
         # hidden-output
-        self.model['Wd'] = initWeight(hidden_size, output_size)
-        # self.model['Wd'] = initWeight(hidden_size, output_size)*0.1
+        # self.model['Wd'] = initWeight(hidden_size, output_size)
+        self.model['Wd'] = initWeight(hidden_size, output_size)*0.1
         print("wd=", np.linalg.norm(self.model['Wd']))
         self.model['bd'] = np.zeros((1, output_size))
 
@@ -173,8 +173,8 @@ class DQN:
         
         loss_cost = 0.0
         dYs = []
-        print(batch[0][2])
-        print("rewards:", [x[2] for x in batch])
+        # print(batch[0][2])
+        # print("rewards:", [x[2] for x in batch])
         for i,x in enumerate(batch):
             Y = Ys[i]
             nY = tYs[i]
@@ -234,7 +234,7 @@ class DQN:
         learning_rate = params.get('learning_rate', 0.001)
         decay_rate = params.get('decay_rate', 0.999)
         momentum = params.get('momentum', 0.1)
-        print('momentum=', momentum)
+        # print('momentum=', momentum)
         grad_clip = params.get('grad_clip', -1e-3)
         smooth_eps = params.get('smooth_eps', 1e-8)
         sdg_type = params.get('sdgtype', 'rmsprop')

@@ -38,7 +38,15 @@ class DQNTF(object):
 
         self.build_model()
         # self.saver = tf.train.Saver()
+
+
               
+    def init_weight(self, fan_in, fan_out, name, scale = 1):
+        scaler = np.sqrt(6./(fan_in + fan_out))
+        init = scaler * (tf.random_uniform([fan_in, fan_out])*2 - 1)
+        init *= scale
+        return tf.Variable(init, name)
+
 
     def build_model(self):
         tf.reset_default_graph()
@@ -48,15 +56,16 @@ class DQNTF(object):
         self.done_mask   = tf.placeholder(tf.bool, shape=(None))
         self.rewards     = tf.placeholder(tf.float32, shape=(None))
         self.actions     = tf.placeholder(tf.int32, shape=(None))
-        self.q           = self.get_q_values(self.states, "q")
-        self.target_q    = self.get_q_values(self.states, "target_q")
+        self.q, self.W1, self.W2    = self.get_q_values(self.states, "q")
+        self.target_q, _, _    = self.get_q_values(self.states, "target_q")
+
         self.loss, self.reg_loss        = self.get_loss(self.q, self.target_q)
         
         self.set_train_step("q")
         self.set_update_step("q", "target_q")
         self.sess.run(tf.global_variables_initializer())
-        w1, w2 = self.get_weights("q")
-        w1_val, w2_val = self.sess.run([tf.norm(w1), tf.norm(w2)])
+
+        w1_val, w2_val = self.sess.run([tf.norm(self.W1), tf.norm(self.W2)])
         print("w1_val={} | w2_val={}".format(w1_val, w2_val))
 
 
@@ -81,11 +90,6 @@ class DQNTF(object):
         self.update_step = tf.group(*all_assignments)
 
 
-    def get_weights(self, scope):
-        with tf.variable_scope(scope, reuse=True):
-            w1 = tf.get_variable("dense/kernel")
-            w2 = tf.get_variable("dense_1/kernel")
-            return w1, w2
 
     def get_loss(self, q, target_q):
         """
@@ -98,10 +102,9 @@ class DQNTF(object):
         not_done = 1 - tf.cast(self.done_mask, tf.float32) # [batch_size]
         max_q = tf.reduce_max(target_q, axis = 1) # [batch_size]
         gamma = self.gamma
-        print(gamma)
         Q_samp = self.rewards + gamma * tf.multiply(max_q, not_done) # [batch_size]
         q_extracted = tf.reduce_sum(tf.multiply(tf.one_hot(indices=self.actions, depth=self.output_size), q), axis=1)
-        W1, W2 = self.get_weights("q")
+        W1, W2 = self.W1, self.W2
         reg = self.config.reg
 
         with tf.variable_scope("loss") as scope:
@@ -111,10 +114,6 @@ class DQNTF(object):
             print(self.batch_size)
             return loss + reg_loss, reg_loss
         
-            
-
-
-
     def get_q_values(self, state, scope, reuse=False):
         """
         Returns Q values for all actions
@@ -128,12 +127,18 @@ class DQNTF(object):
         Returns:
             out: (tf tensor) of shape = (batch_size, num_actions)
         """
-        hidden_size, output_size = self.hidden_size, self.output_size
+        input_size, hidden_size, output_size = self.input_size, self.hidden_size, self.output_size
         with tf.variable_scope(scope):
             x = state
-            x = tf.layers.dense(x, hidden_size, activation=tf.nn.relu, reuse = reuse)
-            x = tf.layers.dense(x, output_size, activation=None, reuse = reuse)
-            return x
+            w1 = self.init_weight(input_size, hidden_size, "W1")
+            b1 = tf.Variable(tf.zeros(hidden_size), "b1")
+            x = tf.add(tf.matmul(x, w1), b1)
+            x = tf.nn.relu(x)
+
+            w2 = self.init_weight(hidden_size, output_size, "W2", scale = 0.1)
+            b2 = tf.Variable(tf.zeros(output_size), "b1")
+            x = tf.add(tf.matmul(x, w2), b2)
+            return x, w1, w2
 
 
     def train_batch(self, batch_experience):
@@ -149,7 +154,7 @@ class DQNTF(object):
         done        = np.array([x[4] for x in batch_experience]) # [batch_size, 252]
         rewards     = np.array([x[2] for x in batch_experience]) # [batch_size, 252]
         actions     = np.array([x[1] for x in batch_experience]) # [batch_size, 252]
-        print("rewards:", rewards)
+        # print("rewards:", rewards)
         dic = {
             self.states:        curr_states,
             self.next_states:   next_states,
