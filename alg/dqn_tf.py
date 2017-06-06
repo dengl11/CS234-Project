@@ -47,6 +47,10 @@ class DQNTF(object):
         init *= scale
         return tf.Variable(init, name)
 
+    def print_weight(self):
+        w1_val, w2_val = self.sess.run([tf.norm(self.W1), tf.norm(self.W2)])
+        # print("w1_val={} | w2_val={}".format(w1_val, w2_val))
+
 
     def build_model(self):
         tf.reset_default_graph()
@@ -57,17 +61,16 @@ class DQNTF(object):
         self.rewards     = tf.placeholder(tf.float32, shape=(None))
         self.actions     = tf.placeholder(tf.int32, shape=(None))
         self.q, self.W1, self.W2    = self.get_q_values(self.states, "q")
-        self.target_q, _, _    = self.get_q_values(self.states, "target_q")
+        self.target_q, _, _    = self.get_q_values(self.next_states, "target_q")
 
         self.loss, self.reg_loss        = self.get_loss(self.q, self.target_q)
         
         self.set_train_step("q")
         self.set_update_step("q", "target_q")
         self.sess.run(tf.global_variables_initializer())
+        
 
-        w1_val, w2_val = self.sess.run([tf.norm(self.W1), tf.norm(self.W2)])
-        print("w1_val={} | w2_val={}".format(w1_val, w2_val))
-
+    
 
 
     def set_train_step(self, scope):
@@ -106,12 +109,14 @@ class DQNTF(object):
         q_extracted = tf.reduce_sum(tf.multiply(tf.one_hot(indices=self.actions, depth=self.output_size), q), axis=1)
         W1, W2 = self.W1, self.W2
         reg = self.config.reg
-
+        print(self.batch_size)
         with tf.variable_scope("loss") as scope:
             loss = tf.reduce_mean(tf.square(q_extracted - Q_samp)) # scalar
-            reg_loss = 0.5 * reg * tf.norm(W1)**2/self.batch_size
-            reg_loss += 0.5 * reg * tf.norm(W2)**2/self.batch_size
-            print(self.batch_size)
+            # print("reg:", reg)
+            reg_loss = 0.5 * reg * tf.square(tf.norm(W1))/self.batch_size
+            reg_loss += 0.5 * reg * tf.square(tf.norm(W2))/self.batch_size
+            # print(self.batch_size)
+            reg_loss /= 10
             return loss + reg_loss, reg_loss
         
     def get_q_values(self, state, scope, reuse=False):
@@ -124,7 +129,7 @@ class DQNTF(object):
             scope: (string) scope name, that specifies if target network or not
             reuse: (bool) reuse of variables in the scope
 
-        Returns:
+        Returns: gre
             out: (tf tensor) of shape = (batch_size, num_actions)
         """
         input_size, hidden_size, output_size = self.input_size, self.hidden_size, self.output_size
@@ -136,7 +141,7 @@ class DQNTF(object):
             x = tf.nn.relu(x)
 
             w2 = self.init_weight(hidden_size, output_size, "W2", scale = 0.1)
-            b2 = tf.Variable(tf.zeros(output_size), "b1")
+            b2 = tf.Variable(tf.zeros(output_size), "b2")
             x = tf.add(tf.matmul(x, w2), b2)
             return x, w1, w2
 
@@ -171,7 +176,9 @@ class DQNTF(object):
 
     def update_target_params(self):
         print("=============== update_target_params ===============")
+        self.print_weight()
         self.sess.run(self.update_step)
+        self.print_weight()
         
         
     def predict_action(self, states):
@@ -183,7 +190,9 @@ class DQNTF(object):
         """
         action_values = self.sess.run(self.q, feed_dict={self.states: states})[0]
         # print("action_values=", action_values)
-        return np.argmax(action_values)
+        actions = np.argmax(action_values)
+        # print("actions: ", actions)
+        return actions
 
     def save(self):
         """

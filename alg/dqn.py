@@ -7,20 +7,24 @@ class DQN:
         self.model = {}
         # input-hidden
         self.model['Wxh'] = initWeight(input_size, hidden_size)
-        print("wh=", np.linalg.norm(self.model['Wxh']))
+        
         self.model['bxh'] = np.zeros((1, hidden_size))
       
         # hidden-output
         # self.model['Wd'] = initWeight(hidden_size, output_size)
         self.model['Wd'] = initWeight(hidden_size, output_size)*0.1
-        print("wd=", np.linalg.norm(self.model['Wd']))
+        
         self.model['bd'] = np.zeros((1, output_size))
 
         self.update = ['Wxh', 'bxh', 'Wd', 'bd']
         self.regularize = ['Wxh', 'Wd']
 
         self.step_cache = {}
-        
+      
+    def print_weight(self):
+        print("wh=", np.linalg.norm(self.model['Wxh']))
+        print("wd=", np.linalg.norm(self.model['Wd']))
+
 
     def getStruct(self):
         return {'model': self.model, 'update': self.update, 'regularize': self.regularize}
@@ -226,11 +230,13 @@ class DQN:
         out = {}
         out['cost'] = {'reg_cost' : reg_cost, 'loss_cost' : loss_cost, 'total_cost' : loss_cost + reg_cost}
         out['grads'] = grads
+        # print(out['cost'])
         return out
 
 
     """ A single batch """
     def singleBatch(self, batch, params, clone_dqn):
+        # self.print_weight()
         learning_rate = params.get('learning_rate', 0.001)
         decay_rate = params.get('decay_rate', 0.999)
         momentum = params.get('momentum', 0.1)

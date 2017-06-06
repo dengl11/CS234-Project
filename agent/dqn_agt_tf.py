@@ -14,6 +14,7 @@ class DQNAgentTF(AgentDQN):
         
         self.epsilon = params['epsilon']
         self.agent_run_mode = params['agent_run_mode']
+
         print("agent_run_mode:{}".format(self.agent_run_mode))
         self.agent_act_level = params['agent_act_level']
         self.clear_exp_pool()
@@ -29,6 +30,8 @@ class DQNAgentTF(AgentDQN):
         
         self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
         
+        # self.dqn = DQN(self.state_dimension, self.hidden_size, self.num_actions)
+        # self.clone_dqn = copy.deepcopy(self.dqn)
         self.cur_bellman_err = 0
                 
         # Prediction Mode: load trained DQN model
@@ -50,6 +53,7 @@ class DQNAgentTF(AgentDQN):
                     self.warm_start = 2
                 return self.rule_policy()
             else:
+                # return self.dqn.predict(representation, {}, predict_model=True)
                 return self.model.predict_action(representation)
     
     
@@ -62,10 +66,13 @@ class DQNAgentTF(AgentDQN):
             for iter in range(len(self.experience_replay_pool)//(batch_size)):
                 batch = [random.choice(self.experience_replay_pool) for i in range(batch_size)]
                 loss = self.model.train_batch(batch)
+                # batch_struct = self.dqn.singleBatch(batch, {'gamma': self.gamma}, self.clone_dqn)
                 self.cur_bellman_err += loss
+                # self.cur_bellman_err += batch_struct['cost']['total_cost']
             # after every batch update target q
             # self.model.update_target_params()
             if iter_batch%show_every==0: print("- cur bellman err %.4f, experience replay pool %s" % (float(self.cur_bellman_err)/len(self.experience_replay_pool), len(self.experience_replay_pool)))
+        # print(batch_struct['cost'])
         return self.cur_bellman_err
             # if iter_batch%DQNTfConfig.save_every==0: 
             #     self.model.save()
