@@ -116,7 +116,6 @@ class DQNTF(object):
             reg_loss = 0.5 * reg * tf.square(tf.norm(W1))/self.batch_size
             reg_loss += 0.5 * reg * tf.square(tf.norm(W2))/self.batch_size
             # print(self.batch_size)
-            reg_loss /= 10
             return loss + reg_loss, reg_loss
         
     def get_q_values(self, state, scope, reuse=False):
@@ -176,9 +175,7 @@ class DQNTF(object):
 
     def update_target_params(self):
         print("=============== update_target_params ===============")
-        self.print_weight()
         self.sess.run(self.update_step)
-        self.print_weight()
         
         
     def predict_action(self, states):
