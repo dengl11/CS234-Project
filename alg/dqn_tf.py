@@ -75,7 +75,7 @@ class DQNTF(object):
 
     def set_train_step(self, scope):
         trainable_var_key = tf.GraphKeys.TRAINABLE_VARIABLES
-        optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate, epsilon = 1e-8, momentum = 0.1)
+        optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate, beta1 = self.beta)
         xs = tf.get_collection(key=trainable_var_key, scope=scope)
         with tf.variable_scope("loss"):
             grad_var_list = optimizer.compute_gradients(self.loss, xs)
