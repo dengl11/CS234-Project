@@ -30,7 +30,7 @@ class DQNTF(object):
 
         self.gamma = params.get('gamma', 0.9)
         self.learning_rate = self.config.lr
-        self.beta = params.get('beta', 0.999)
+        self.beta = self.config.beta
 
         self.input_size = input_size # 272
         self.hidden_size = self.config.hidden_size # 60

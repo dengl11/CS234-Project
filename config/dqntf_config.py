@@ -6,9 +6,10 @@ class DQNTfConfig:
     plot_output  = output_path + "scores.png"
     record_path  = output_path + "monitor/"
     hidden_size_2= 120
-    hidden_size  = 60
+    hidden_size  = 80
     grad_clip    = False
     clip_val     = 10
     save_every   = 100 # in batch
-    reg          = 1e-3
-    lr           = 1e-3
+    reg          = 1e-4
+    lr           = 2e-3
+    beta         = 0.9

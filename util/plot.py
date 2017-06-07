@@ -27,15 +27,19 @@ def load_performance_file(path):
             numbers['ave_rewards'].append(data['ave_reward'][str(key)])
     return numbers
 
-def draw_learning_curve(numbers, size = (24, 8)):
+def draw_learning_curve(numbers, size = (16, 8)):
     """ draw the learning curve """
+    hfont = {'fontsize':24}
     plt.figure(figsize=size)
-    plt.xlabel('Simulation Epoch', fontSize=18)
-    plt.ylabel('Success Rate', fontSize=18)
-    plt.title('Learning Curve', fontSize=20)
-    plt.grid(True)
+    plt.xlabel('Simulation Epoch', fontSize=18, labelpad=20)
+    plt.ylabel('Success Rate', fontSize=18, labelpad=20)
+    
+    plt.title('Learning Curve',**hfont, y=1.1)
+    plt.xticks(fontsize = 16)
+    plt.yticks(fontsize = 16)
+    plt.grid(False)
 
-    plt.plot(numbers, 'r', lw=1)
+    ax = plt.plot(numbers, 'r', lw=4)
     # plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
     plt.show()
 
