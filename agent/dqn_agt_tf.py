@@ -15,7 +15,6 @@ class DQNAgentTF(AgentDQN):
         self.epsilon = params['epsilon']
         self.agent_run_mode = params['agent_run_mode']
 
-        print("agent_run_mode:{}".format(self.agent_run_mode))
         self.agent_act_level = params['agent_act_level']
         self.clear_exp_pool()
         

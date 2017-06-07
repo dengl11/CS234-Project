@@ -33,7 +33,8 @@ class DQNTF(object):
         self.beta = params.get('beta', 0.999)
 
         self.input_size = input_size # 272
-        self.hidden_size = hidden_size # 60
+        self.hidden_size = self.config.hidden_size # 60
+        print(self.hidden_size)
         self.output_size = output_size # 43
 
         self.build_model()
@@ -60,8 +61,8 @@ class DQNTF(object):
         self.done_mask   = tf.placeholder(tf.bool, shape=(None))
         self.rewards     = tf.placeholder(tf.float32, shape=(None))
         self.actions     = tf.placeholder(tf.int32, shape=(None))
-        self.q, self.W1, self.W2, self.W3    = self.get_q_values(self.states, "q")
-        self.target_q, _, _, _    = self.get_q_values(self.next_states, "target_q")
+        self.q, self.W1, self.W2    = self.get_q_values(self.states, "q")
+        self.target_q, _, _,    = self.get_q_values(self.next_states, "target_q")
 
         self.loss, self.reg_loss        = self.get_loss(self.q, self.target_q)
         
@@ -107,13 +108,12 @@ class DQNTF(object):
         gamma = self.gamma
         Q_samp = self.rewards + gamma * tf.multiply(max_q, not_done) # [batch_size]
         q_extracted = tf.reduce_sum(tf.multiply(tf.one_hot(indices=self.actions, depth=self.output_size), q), axis=1)
-        W1, W2, W3 = self.W1, self.W2, self.W3
+        W1, W2 = self.W1, self.W2
         reg = self.config.reg
-        print(self.batch_size)
         with tf.variable_scope("loss") as scope:
             loss = tf.reduce_mean(tf.square(q_extracted - Q_samp)) # scalar
             # print("reg:", reg)
-            reg_loss = 0.5 * reg /self.batch_size * sum(tf.square(tf.norm(w)) for w in [W1, W2, W3])
+            reg_loss = 0.5 * reg * sum(tf.square(tf.norm(w)) for w in [W1, W2])
             # print(self.batch_size)
             return loss + reg_loss, reg_loss
         
@@ -138,16 +138,19 @@ class DQNTF(object):
             x = tf.add(tf.matmul(x, w1), b1)
             x = tf.nn.relu(x)
 
-            w2 = self.init_weight(hidden_size, hidden_size_2, "W2")
-            b2 = tf.Variable(tf.zeros(hidden_size_2), "b2")
+            w2 = self.init_weight(hidden_size, output_size, "W2", scale = 0.1)
+            b2 = tf.Variable(tf.zeros(output_size), "b2")
             x = tf.add(tf.matmul(x, w2), b2)
-            x = tf.nn.relu(x)
 
-            w3 = self.init_weight(hidden_size_2, output_size, "W3", scale = 0.1)
-            b3 = tf.Variable(tf.zeros(output_size), "b3")
-            x = tf.add(tf.matmul(x, w3), b3)
-            
-            return x, w1, w2, w3
+            # w2 = self.init_weight(hidden_size, hidden_size_2, "W2", scale = 0.1)
+            # b2 = tf.Variable(tf.zeros(hidden_size_2), "b2")
+            # x = tf.add(tf.matmul(x, w2), b2)
+            # x = tf.nn.relu(x)
+
+            # w3 = self.init_weight(hidden_size_2, output_size, "W3", scale = 0.1)
+            # b3 = tf.Variable(tf.zeros(output_size), "b3")
+            # x = tf.add(tf.matmul(x, w3), b3)
+            return x, w1, w2
 
 
     def train_batch(self, batch_experience):
