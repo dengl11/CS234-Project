@@ -44,13 +44,16 @@ def draw_learning_curve(numbers, size = (16, 8)):
     plt.show()
 
 
-def draw_loss_curve(numbers, size = (24, 8)):
+def draw_loss_curve(numbers, size = (16, 8)):
     plt.figure(figsize=size)
-    plt.xlabel('Simulation Epoch', fontSize=18)
-    plt.ylabel('Loss', fontSize=18)
-    plt.title('Loss Curve', fontSize=20)
-    plt.grid(True)
+    hfont = {'fontsize':24}
+    plt.xlabel('Simulation Epoch', fontSize=18, labelpad=20)
+    plt.ylabel('Loss', fontSize=18, labelpad=20)
+    plt.title('Loss Curve', **hfont, y=1.1)
+    plt.xticks(fontsize = 16)
+    plt.yticks(fontsize = 16)
+    plt.grid(False)
 
-    plt.plot(numbers, 'r', lw=1)
+    plt.plot(numbers, 'b', lw=4)
     # plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
     plt.show()

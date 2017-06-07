@@ -11,5 +11,5 @@ class DQNTfConfig:
     clip_val     = 10
     save_every   = 100 # in batch
     reg          = 1e-4
-    lr           = 2e-3
+    lr           = 1.2e-3
     beta         = 0.9
