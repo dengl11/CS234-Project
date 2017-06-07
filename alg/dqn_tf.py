@@ -113,7 +113,7 @@ class DQNTF(object):
         with tf.variable_scope("loss") as scope:
             loss = tf.reduce_mean(tf.square(q_extracted - Q_samp)) # scalar
             # print("reg:", reg)
-            reg_loss = 0.5 * reg * sum(tf.square(tf.norm(w)) for w in [W1, W2])
+            reg_loss = 0.5 * reg /self.batch_size * sum(tf.square(tf.norm(w)) for w in [W1, W2])
             # print(self.batch_size)
             return loss + reg_loss, reg_loss
         
