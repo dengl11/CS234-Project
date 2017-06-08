@@ -1,0 +1,61 @@
+{
+  "dia_acts": {
+    "request": [
+      {
+        "request_slots": [
+          "origin1"
+        ],
+        "nl": {
+          "agt": "Which airport are you departing from | for your departure on $flightDate1$ | which arrives on $flightDate2$ | for your group of $travelers$ | which arrives at $destination1$",
+          "usr": "What's the departure airport of the flight | that departs on $flightDate1$ | arrives on $flightDate2$ | for a group of $travelers$ | which arrives at $destination1$"
+        },
+        "inform_slots": [
+        ]
+      },
+      {
+        "request_slots": [
+          "destination1"
+        ],
+        "nl": {
+          "agt": "Which airport are you arriving at | for your departure on $flightDate1$ | which arrives on $flightDate2$ | for your group of $travelers$ | which departs from $origin1$",
+          "usr": "What's the arrival airport of the flight | that departs on $flightDate1$ | arrives on $flightDate2$ | for a group of $travelers$ | which departs from $origin1$"
+        },
+        "inform_slots": [
+        ]
+      },
+      {
+        "request_slots": [
+          "flightDate1"
+        ],
+        "nl": {
+          "agt": "What time would you like to depart for your flight | from $origin1$ | to $destination1$ | that arrives on $flightDate2$ | for your group of $travelers$",
+          "usr": "When does the flight depart | from $origin1$ | to $destination1$ | arriving on $flightDate2$ | for a group of $travelers$"
+        },
+        "inform_slots": [
+        ]
+      },
+      {
+        "request_slots": [
+          "flightDate2"
+        ],
+        "nl": {
+          "agt": "What time would you like to arrive for your flight | from $origin1$ | to $destination1$ | that departs on $flightDate1$ | for your group of $travelers$",
+          "usr": "When does the flight arrive | from $origin1$ | to $destination1$ | departing on $flightDate1$ | for a group of $travelers$"
+        },
+        "inform_slots": [
+        ]
+      },
+      {
+        "request_slots": [
+          "travelers"
+        ],
+        "nl": {
+          "agt": "How many travelers for your flight | from $origin1$ | to $destination1$ | that departs on $flightDate1$ | arrives on $flightDate2$",
+          "usr": "How many travelers can be in the flight | from $origin1$ | to $destination1$ | that departs on $flightDate1$ | arrives on $flightDate2$"
+        },
+        "inform_slots": [
+        ]
+      }
+    ]
+  }
+}

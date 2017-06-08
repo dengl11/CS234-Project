@@ -1,0 +1,71 @@
+function FieldGroup({ id, label, help, ...props }) {
+  return (
+    <FormGroup controlId={id}>
+      <ControlLabel>&nbsp;&nbsp;{label}&nbsp;&nbsp;</ControlLabel>
+      <FormControl {...props}/>
+      {help && <HelpBlock>{help}</HelpBlock>}
+    </FormGroup>
+  );
+}
+
+const formInstance = (
+ <div> 
+  <Form inline>
+    <FieldGroup
+      id="formControlsText"
+      type="text"
+      label="Movie"
+      value="Deadpool"
+      placeholder="Enter text"
+    />
+      </Form>
+    <br/>
+<Form inline>
+    <FieldGroup
+      id="formControlsText"
+      type="text"
+      label="Date"
+      value="Tomorrow"
+      placeholder="Enter text"
+    />
+    <FormGroup controlId="formControlsSelect">
+      <ControlLabel>&nbsp;&nbsp;Time&nbsp;&nbsp;</ControlLabel>
+      <FormControl componentClass="select" placeholder="select">
+        <option value="select">6:10pm</option>
+        <option value="other">...</option>
+      </FormControl>
+    </FormGroup>
+    </Form>
+    <br/>
+<Form inline>
+    <FieldGroup
+      id="formControlsEmail"
+      type="text"
+      label="Venue"
+      value="Birmingham"
+      placeholder="Carmike Summit"
+    />
+    <FieldGroup
+      id="formControlsEmail"
+      type="text"
+      label="City"
+      value="Birmingham"
+      placeholder="Enter email"
+    />
+    <FormGroup controlId="formControlsSelect">
+      <ControlLabel>&nbsp;&nbsp;State&nbsp;&nbsp;</ControlLabel>
+      <FormControl componentClass="select" placeholder="select">
+        <option value="select">AL</option>
+        <option value="other">...</option>
+      </FormControl>
+    </FormGroup>
+      </Form>
+<br/>
+    <Button type="submit">
+      Submit
+    </Button>
+  </div>
+);
+
+ReactDOM.render(formInstance, mountNode);
+
