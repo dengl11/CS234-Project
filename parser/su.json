@@ -1,0 +1,26 @@
+[
+  {
+    "name": "origin1",
+    "value": ""
+  },
+  {
+    "name": "destination1",
+    "value": ""
+  },
+  {
+    "name": "flightDate1",
+    "value": ""
+  },
+  {
+    "name": "flightDate2",
+    "value": ""
+  },
+  {
+    "name": "flexible",
+    "value": ""
+  },
+  {
+    "name": "travelers",
+    "value": "0"
+  }
+]
