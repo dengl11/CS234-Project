@@ -1,0 +1,413 @@
+"inform": [
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$origin1$ is available.",
+      "usr": "I want to go to $origin1$."
+    },
+    "inform_slots": [
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "yes, please",
+      "usr": "yes"
+    },
+    "inform_slots": [
+      "ticket"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$flightDate1$ is available.",
+      "usr": "I want to watch at $flightDate1$."
+    },
+    "inform_slots": [
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$destination1$ is available.",
+      "usr": "I want to watch to $destination1$."
+    },
+    "inform_slots": [
+      "destination1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$flightDate2$ is available.",
+      "usr": "I want to set it up $flightDate2$"
+    },
+    "inform_slots": [
+      "flightDate2"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$travelers$ tickets",
+      "usr": "I want $travelers$ tickets please!"
+    },
+    "inform_slots": [
+      "travelers"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$travelers$ tickets at $flightDate1$.",
+      "usr": "I need $travelers$ tickets at $flightDate1$."
+    },
+    "inform_slots": [
+      "travelers",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$flightDate1$ on $flightDate2$ is available.",
+      "usr": "I want to watch at $flightDate1$ on $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$origin1$ at $flightDate1$ is available.",
+      "usr": "I want to watch $origin1$ at $flightDate1$."
+    },
+    "inform_slots": [
+      "origin1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$critic_rating$",
+      "usr": "$critic_rating$"
+    },
+    "inform_slots": [
+      "critic_rating"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$description$",
+      "usr": "$description$"
+    },
+    "inform_slots": [
+      "description"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$genre$ is available",
+      "usr": "I want to watch a $genre$ movie."
+    },
+    "inform_slots": [
+      "genre"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$mpaa_rating$",
+      "usr": "$mpaa_rating$"
+    },
+    "inform_slots": [
+      "mpaa_rating"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$video_format$",
+      "usr": "$video_format$"
+    },
+    "inform_slots": [
+      "video_format"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$price$",
+      "usr": "$price$"
+    },
+    "inform_slots": [
+      "price"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$numberofkids$",
+      "usr": "$numberofkids$"
+    },
+    "inform_slots": [
+      "numberofkids"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$movie_series$",
+      "usr": "$movie_series$"
+    },
+    "inform_slots": [
+      "movie_series"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$flightDate1$ to $destination1$ is available.",
+      "usr": "I want to watch at $flightDate1$ to $destination1$."
+    },
+    "inform_slots": [
+      "destination1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$origin1$ is playing at $flightDate1$ to $destination1$.",
+      "usr": "$origin1$ is playing at $flightDate1$ to $destination1$."
+    },
+    "inform_slots": [
+      "destination1",
+      "origin1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$travelers$ tickets at $flightDate1$ $flightDate2$.",
+      "usr": "$travelers$ tickets at $flightDate1$ $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "travelers",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [
+      "taskcomplete"
+    ],
+    "nl": {
+      "agt": "Okay, your tickets is booked.",
+      "usr": "Okay, your tickets is booked."
+    },
+    "inform_slots": []
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "$other$",
+      "usr": "$other$"
+    },
+    "inform_slots": [
+      "other"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked $travelers$ tickets from $origin1$ for you.",
+      "usr": "Okay, I have booked $travelers$ tickets from $origin1$ for you."
+    },
+    "inform_slots": [
+      "taskcomplete",
+      "travelers",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked $travelers$ tickets from $origin1$ at $flightDate1$ $flightDate2$ for you.",
+      "usr": "Okay, I have booked $travelers$ tickets from $origin1$ at $flightDate1$ $flightDate2$ for you."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "taskcomplete",
+      "travelers",
+      "origin1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked the tickets from $origin1$ at $flightDate1$ $flightDate2$.",
+      "usr": "Okay, I have booked the tickets from $origin1$ at $flightDate1$ $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "taskcomplete",
+      "origin1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked the tickets from $origin1$ on $flightDate2$.",
+      "usr": "Okay, I have booked the tickets from $origin1$ on $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "taskcomplete",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked $travelers$ tickets from $origin1$ on $flightDate2$.",
+      "usr": "Okay, I have booked $travelers$ tickets from $origin1$ on $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "taskcomplete",
+      "travelers",
+      "origin1",
+      "other"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked $travelers$ tickets from $origin1$ starting at $flightDate1$.",
+      "usr": "Okay, I have booked $travelers$ tickets from $origin1$ starting at $flightDate1$."
+    },
+    "inform_slots": [
+      "taskcomplete",
+      "travelers",
+      "origin1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked $travelers$ tickets from $origin1$ $flightDate2$.",
+      "usr": "Okay, I have booked $travelers$ tickets from $origin1$ $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "taskcomplete",
+      "travelers",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked the tickets from $origin1$ at $flightDate1$ on $flightDate2$ to $destination1$.",
+      "usr": "Okay, I have booked the tickets from $origin1$ at $flightDate1$ on $flightDate2$ to $destination1$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "destination1",
+      "taskcomplete",
+      "origin1",
+      "flightDate1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked the tickets from $origin1$ for you.",
+      "usr": "Okay, I have booked the tickets from $origin1$ for you."
+    },
+    "inform_slots": [
+      "taskcomplete",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I have booked $travelers$ tickets from $origin1$ starting at $flightDate1$ on $flightDate2$.",
+      "usr": "Okay, I have booked $travelers$ tickets from $origin1$ starting at $flightDate1$ on $flightDate2$."
+    },
+    "inform_slots": [
+      "travelers",
+      "other",
+      "flightDate1",
+      "flightDate2",
+      "taskcomplete",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Yes, I have booked $travelers$ tickets for you.",
+      "usr": "Yes, I have booked $travelers$ tickets for you."
+    },
+    "inform_slots": [
+      "taskcomplete",
+      "travelers"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay your purchase of $travelers$ tickets from $origin1$ to $destination1$ is confirmed.",
+      "usr": "Okay your purchase of $travelers$ tickets from $origin1$ to $destination1$ is confirmed."
+    },
+    "inform_slots": [
+      "destination1",
+      "taskcomplete",
+      "travelers",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay, I purchased $travelers$ tickets from $origin1$ to $destination1$ on $flightDate2$.",
+      "usr": "Okay, I purchased $travelers$ tickets from $origin1$ to $destination1$ on $flightDate2$."
+    },
+    "inform_slots": [
+      "flightDate2",
+      "destination1",
+      "taskcomplete",
+      "travelers",
+      "origin1"
+    ]
+  },
+  {
+    "request_slots": [],
+    "nl": {
+      "agt": "Okay your purchase of $travelers$ tickets from $origin1$ at $flightDate1$ to $destination1$ is confimed!",
+      "usr": "Okay your purchase of $travelers$ tickets from $origin1$ at $flightDate1$ to $destination1$ is confimed!"
+    },
+    "inform_slots": [
+      "destination1",
+      "taskcomplete",
+      "travelers",
+      "origin1",
+      "flightDate1"
+    ]
+  }
+]

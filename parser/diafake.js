@@ -94,7 +94,7 @@ let out = stuff.usr.map(thing => {
   var newthing = Object.assign(thing.inform)
   delete newthing[reqtype]
   var vecthing = vecify(newthing)
-  return domagic('usr', [reqtype], reqfrag, combos(vecthing, 2))
+  return domagic('usr', [reqtype], reqfrag, combos(vecthing, 0))
 });
 let out2 = stuff.agt.map(thing => {
   var reqtype = thing.request
@@ -102,7 +102,7 @@ let out2 = stuff.agt.map(thing => {
   var newthing = Object.assign(thing.inform)
   delete newthing[reqtype]
   var vecthing = vecify(newthing)
-  return domagic('agt', [reqtype], reqfrag, combos(vecthing, 2))
+  return domagic('agt', [reqtype], reqfrag, combos(vecthing, 0))
 });
 
 for(var i = 0; i < out.length; i++) {

@@ -1,6 +1,5 @@
+node_modules
+*swp
 data/
-.DS_Store
-.ipynb_checkpoints
-__pycache__/
-*.zip
+*/*/__pycache__/*
 trained_model/*
