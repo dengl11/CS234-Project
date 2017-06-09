@@ -7,7 +7,7 @@
 # ### Training of DQN in Tensorflow
 # --------------------------
 
-# In[3]:
+# In[9]:
 
 #
 from util import *
@@ -25,6 +25,9 @@ from six.moves import cPickle as pickle
 import IPython
 import copy, argparse, json
 
+get_ipython().magic(u'matplotlib inline')
+get_ipython().magic(u'load_ext autoreload')
+get_ipython().magic(u'autoreload 2')
 
 
 # # Load Data
@@ -32,7 +35,7 @@ import copy, argparse, json
 
 # #### Action Set
 
-# In[4]:
+# In[137]:
 
 #
 act_set_path = './data/dia_acts.txt'
@@ -42,40 +45,40 @@ sample_dict(act_set)
 
 # ### slot set
 
-# In[3]:
+# In[138]:
 
 #
-slots_set_path = "./data/slot_set.txt"
+slots_set_path = "./parser/slot_set.txt"
 slot_set = text_to_dict(slots_set_path)
 sample_dict(slot_set)
 
 
-# ### movie dic: info about movie
+# ### flight dic: info about flights
 
-# In[4]:
+# In[139]:
 
 #
-movie_kb_path = "./data/movie_kb.1k.p"
-movie_kb = pickle.load(open(movie_kb_path, 'rb'), encoding="latin")
-sample_dict(movie_kb, sample_size=1)
+flight_kb_path = "./parser/fkb.json.p"
+flight_kb = pickle.load(open(flight_kb_path, 'rb'), encoding="latin")
+sample_dict(flight_kb, sample_size=1)
 
 
 # # Language Generator (pretrained)
 # -------------------
 
-# In[5]:
+# In[140]:
 
 #
 nlg_model_path = './data/trained_model/nlg/lstm_tanh_relu_[1468202263.38]_2_0.610.p'
 nlg_model = Nlg()
 nlg_model.load_nlg_model(nlg_model_path)
-diaact_nl_pairs_path = "./data/nlg/dia_act_nl_pairs.v6.json"
+diaact_nl_pairs_path = "./parser/flight.nl.pairs.json"
 nlg_model.load_predefine_act_nl_pairs(diaact_nl_pairs_path)
 
 
 # ## Model Params
 
-# In[6]:
+# In[141]:
 
 #
 model_params = pickle.load(open(nlg_model_path, 'rb'), encoding='latin1')
@@ -93,10 +96,10 @@ for k in params:
 
 # ### goal
 
-# In[7]:
+# In[142]:
 
 #
-goal_file_path = './data/user_goals_first_turn_template.part.movie.v1.p'
+goal_file_path = './parser/fg.json.p'
 all_goal_set = pickle.load(open(goal_file_path, 'rb'), encoding="latin")
 print("goals length: {}".format(len(all_goal_set)))
 print("Sample the first goal: \n{}".format(all_goal_set[0]))
@@ -104,7 +107,7 @@ print("Sample the first goal: \n{}".format(all_goal_set[0]))
 
 # ### Split goal set
 
-# In[8]:
+# In[143]:
 
 # split goal set
 split_fold = params.get('split_fold', 5)
@@ -121,7 +124,7 @@ print(len(goal_set['all']))
 
 # ### user simulator param
 
-# In[9]:
+# In[144]:
 
 #
 usersim_params = {}
@@ -138,21 +141,21 @@ usersim_params['act_level'] = 0
 usersim_params['learn_phase'] = 'all'
 
 
-# ### a movie dictionary for user simulator - slot:possible values
+# ### a flights dictionary for user simulator - slot:possible values
 
-# In[10]:
+# In[146]:
 
 #
-movie_dict_path = './data/user/dicts.v3.p'
-movie_dictionary = pickle.load(open(movie_dict_path, 'rb'), encoding="latin")
-samples = sample_dict(movie_dictionary, sample_size=1)
+flight_dict_path = './parser/dicts.v3.p'
+flight_dictionary = pickle.load(open(flight_dict_path, 'rb'), encoding="latin")
+samples = sample_dict(flight_dictionary, sample_size=1)
 
 
 # ###  Create a User
 
-# In[11]:
+# In[147]:
 
-user = RuleSimulator(movie_dictionary, act_set, slot_set, goal_set, usersim_params)
+user = RuleSimulator(flight_dictionary, act_set, slot_set, goal_set, usersim_params)
 user.set_nlg_model(nlg_model)
 
 
@@ -161,7 +164,7 @@ user.set_nlg_model(nlg_model)
 
 # ## param
 
-# In[12]:
+# In[148]:
 
 #
 agent_params = {}
@@ -197,7 +200,7 @@ success_rate_threshold = 0.3
 
 # ### create an agent
 
-# In[13]:
+# In[149]:
 
 # agent = RequestBasicsAgent(movie_kb, act_set, slot_set, agent_params)
 # agent = AgentDQN(movie_kb, act_set, slot_set, agent_params)
@@ -205,9 +208,9 @@ success_rate_threshold = 0.3
 agt = 10
 agent_params['batch_size']  = batch_size
 if agt == 9:
-    agent = AgentDQN(movie_kb, act_set, slot_set, agent_params)
+    agent = AgentDQN(flight_kb, act_set, slot_set, agent_params)
 else:
-    agent = DQNAgentTF(movie_kb, act_set, slot_set, agent_params)
+    agent = DQNAgentTF(flight_kb, act_set, slot_set, agent_params)
 
 agent.set_nlg_model(nlg_model)
 
@@ -215,9 +218,9 @@ agent.set_nlg_model(nlg_model)
 # # Dialog Manager
 # -------------------
 
-# In[14]:
+# In[150]:
 
-dlg_manager = DlgManager(agent, user, act_set, slot_set, movie_kb)
+dlg_manager = DlgManager(agent, user, act_set, slot_set, flight_kb)
 
 
 # ## Running Episodes
@@ -225,7 +228,7 @@ dlg_manager = DlgManager(agent, user, act_set, slot_set, movie_kb)
 
 # ### Param
 
-# In[15]:
+# In[151]:
 
 #
 status = {'successes': 0, 'count': 0, 'cumulative_reward': 0}
@@ -236,7 +239,7 @@ warm_start_epochs = 200
 # num_episodes = 60
 
 
-# In[16]:
+# In[152]:
 
 """ Warm_Start Simulation (by Rule Policy) """
 def warm_start_simulation():
@@ -269,7 +272,7 @@ def warm_start_simulation():
     print ("Current experience replay buffer size %s" % (len(agent.experience_replay_pool)))
 
 
-# In[17]:
+# In[153]:
 
 def simulation_epoch(simulation_epoch_size):
     successes = 0
@@ -297,7 +300,7 @@ def simulation_epoch(simulation_epoch_size):
     return res
 
 
-# In[18]:
+# In[154]:
 
 def run_episodes(count, status):
     successes = 0
@@ -377,7 +380,7 @@ def run_episodes(count, status):
 # # Train & Eval
 # -------------------
 
-# In[20]:
+# In[155]:
 
 performance_records = {}
 performance_records['success_rate'] = {}
@@ -395,5 +398,30 @@ run_episodes(1, status)
 
 # In[21]:
 
-# draw_learning_curve(curve)
+draw_learning_curve(curve)
+
+
+# In[37]:
+
+draw_loss_curve(losses)
+
+
+# In[28]:
+
+draw_loss_curve(losses[-100:])
+
+
+# In[24]:
+
+saver = tf.train.Saver()
+
+
+# In[27]:
+
+saver.save(agent.model.sess, "trained_model/tf_400/", global_step = 400)  
+
+
+# In[ ]:
+
+
 
