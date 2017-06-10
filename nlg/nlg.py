@@ -61,7 +61,8 @@ class Nlg():
         if dia_act['diaact'] == 'inform' and 'taskcomplete' in dia_act['inform_slots'].keys() and dia_act['inform_slots']['taskcomplete'] == NlgConfig.NO_VALUE_MATCH:
             sentence = "Oh sorry, there is no ticket available."
         
-        if boolean_in == False: sentence = self.translate_diaact(dia_act)
+        if boolean_in == False: sentence = "Would you like to buy a ticket?"
+        # if boolean_in == False: sentence = self.translate_diaact(dia_act)
         return sentence
     
     

@@ -1,5 +1,5 @@
 node_modules
 *swp
 data/
-*/*/__pycache__/*
+*/__pycache__/*
 trained_model/*
