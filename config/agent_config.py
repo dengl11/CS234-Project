@@ -6,10 +6,10 @@ class AgentConfig:
 	#     #'greeting':[],
 	#     'request':['moviename', 'starttime', 'theater', 'city', 'state', 'date', 'genre', 'ticket', 'numberofpeople']
 	# }
-	sys_request_slots = ['moviename', 'destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
-	sys_inform_slots = ['moviename', 'destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'taskcomplete', 'ticket']
+	sys_request_slots = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
+	sys_inform_slots = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'taskcomplete', 'ticket']
 	start_dia_acts = {
-    'request':['moviename', 'destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'ticket']
+    'request':['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'ticket']
 	}
 	################################################################################
 	#   A Basic Set of Feasible actions to be Consdered By an RL agent
