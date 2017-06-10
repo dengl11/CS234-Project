@@ -1969,16 +1969,6 @@
       {
         "request_slots": [],
         "nl": {
-          "agt": "Which flight do you want to watch?",
-          "usr": "Which movie is showing?"
-        },
-        "inform_slots": [
-          "moviename"
-        ]
-      },
-      {
-        "request_slots": [],
-        "nl": {
           "agt": "Which date and start time would you like?",
           "usr": "Which date and start time are available?"
         },
