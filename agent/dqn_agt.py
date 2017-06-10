@@ -52,7 +52,8 @@ class AgentDQN(Agent):
         
         self.current_slot_id = 0
         self.phase = 0
-        self.request_set = ['moviename', 'starttime', 'city', 'date', 'theater', 'numberofpeople']
+        self.request_set = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
+        # self.request_set = ['moviename', 'starttime', 'city', 'date', 'theater', 'numberofpeople']
     
     
     def state_to_action(self, state):
