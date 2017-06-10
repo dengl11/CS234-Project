@@ -1,5 +1,6 @@
 node_modules
-*swp
+./*/.DS_Store
+./*/*.swp
 data/
 */__pycache__/*
 trained_model/*
