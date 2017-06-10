@@ -1,6 +1,7 @@
 node_modules
 ./*/.DS_Store
 ./*/*.swp
-data/
+data/trained_model/
+data/dstc2_traindev/
 */__pycache__/*
 trained_model/*
