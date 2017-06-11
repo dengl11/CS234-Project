@@ -27,15 +27,17 @@ class DQNAgentTF(AgentDQN):
         self.warm_start = params.get('warm_start', 0)
         
         self.max_turn = params['max_turn'] + 4
-        self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
+        #self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
+        self.state_dimension = 118
+
         
         self.transfer = transfer
         if self.transfer:
-            #self.model = DQNTF_all(self.state_dimension, self.hidden_size, self.num_actions, params, path=path)
-            self.model = DQNTF_all(self.state_dimension, self.hidden_size, 43, params, path=path)
+            self.model = DQNTF_all(self.state_dimension, self.hidden_size, self.num_actions, params, path=path)
+            #self.model = DQNTF_all(self.state_dimension, self.hidden_size, 43, params, path=path)
         else :
-            # self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
-            self.model = DQNTF(self.state_dimension, self.hidden_size, 43, params)
+            self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
+            #self.model = DQNTF(self.state_dimension, self.hidden_size, 43, params)
 
         # self.dqn = DQN(self.state_dimension, self.hidden_size, self.num_actions)
         # self.clone_dqn = copy.deepcopy(self.dqn)

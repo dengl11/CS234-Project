@@ -12,6 +12,8 @@ class AgentDQN(Agent):
         self.act_set = act_set
         self.slot_set = slot_set
         self.act_cardinality = len(act_set.keys())
+        print(self.act_cardinality)
+
         self.slot_cardinality = len(slot_set.keys())
         
         self.feasible_actions = AgentConfig.feasible_actions
@@ -31,6 +33,7 @@ class AgentDQN(Agent):
         
         self.max_turn = params['max_turn'] + 4
         self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
+        self.state_dimension = 118
         
         self.dqn = DQN(self.state_dimension, self.hidden_size, self.num_actions)
         self.clone_dqn = copy.deepcopy(self.dqn)
@@ -52,8 +55,7 @@ class AgentDQN(Agent):
         
         self.current_slot_id = 0
         self.phase = 0
-        self.request_set = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
-        # self.request_set = ['moviename', 'starttime', 'city', 'date', 'theater', 'numberofpeople']
+        self.request_set = ['moviename', 'starttime', 'city', 'date', 'theater', 'numberofpeople']
     
     
     def state_to_action(self, state):
@@ -147,6 +149,7 @@ class AgentDQN(Agent):
                 kb_binary_rep[0, self.slot_set[slot]] = np.sum( kb_results_dict[slot] > 0.)
 
         self.final_representation = np.hstack([user_act_rep, user_inform_slots_rep, user_request_slots_rep, agent_act_rep, agent_inform_slots_rep, agent_request_slots_rep, current_slots_rep, turn_rep, turn_onehot_rep, kb_binary_rep, kb_count_rep])
+        self.final_representation =  self.final_representation[:, :118]
         return self.final_representation
       
     def run_policy(self, representation):
