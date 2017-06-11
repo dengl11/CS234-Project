@@ -33,7 +33,7 @@ class AgentDQN(Agent):
         
         self.max_turn = params['max_turn'] + 4
         self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
-        self.state_dimension = 118
+        self.state_dimension = 300
         
         self.dqn = DQN(self.state_dimension, self.hidden_size, self.num_actions)
         self.clone_dqn = copy.deepcopy(self.dqn)
@@ -149,7 +149,9 @@ class AgentDQN(Agent):
                 kb_binary_rep[0, self.slot_set[slot]] = np.sum( kb_results_dict[slot] > 0.)
 
         self.final_representation = np.hstack([user_act_rep, user_inform_slots_rep, user_request_slots_rep, agent_act_rep, agent_inform_slots_rep, agent_request_slots_rep, current_slots_rep, turn_rep, turn_onehot_rep, kb_binary_rep, kb_count_rep])
-        self.final_representation =  self.final_representation[:, :118]
+        state = np.zeros((1, 300))
+        state[0, 0:self.final_representation.shape[1]] = self.final_representation
+        self.final_representation = state
         return self.final_representation
       
     def run_policy(self, representation):
