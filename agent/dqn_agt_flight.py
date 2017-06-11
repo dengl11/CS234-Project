@@ -4,7 +4,7 @@ from alg import *
 import copy, argparse, json, random
 import numpy as np
 from six.moves import cPickle as pickle
-
+import glove
 
 class AgentDQN(Agent):
     def __init__(self, movie_dict=None, act_set=None, slot_set=None, params=None):
@@ -37,6 +37,7 @@ class AgentDQN(Agent):
         self.clone_dqn = copy.deepcopy(self.dqn)
         
         self.cur_bellman_err = 0
+        self.first = True
                 
         # Prediction Mode: load trained DQN model
         if params['trained_model_path'] != None:
@@ -54,7 +55,7 @@ class AgentDQN(Agent):
         self.current_slot_id = 0
         self.phase = 0
         self.request_set = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
-        # self.request_set = ['moviename', 'starttime', 'city', 'date', 'theater', 'numberofpeople']
+        #self.request_set = ['moviename', 'starttime', 'city', 'date', 'theater', 'numberofpeople']
     
     
     def state_to_action(self, state):
@@ -82,23 +83,26 @@ class AgentDQN(Agent):
         ########################################################################
         #     Create bag of inform slots representation to represent the current user action
         ########################################################################
-        user_inform_slots_rep = np.zeros((1, self.slot_cardinality))
+        user_inform_slots_rep = np.zeros((1, 50))
         for slot in user_action['inform_slots'].keys():
-            user_inform_slots_rep[0,self.slot_set[slot]] = 1.0
+            user_inform_slots_rep[0] += glove.word_vec(slot)
+            #user_inform_slots_rep[0,self.slot_set[slot]] = 1.0
 
         ########################################################################
         #   Create bag of request slots representation to represent the current user action
         ########################################################################
-        user_request_slots_rep = np.zeros((1, self.slot_cardinality))
+        user_request_slots_rep = np.zeros((1, 50))#))
         for slot in user_action['request_slots'].keys():
-            user_request_slots_rep[0, self.slot_set[slot]] = 1.0
+            user_request_slots_rep[0] += glove.word_vec(slot)
+            #user_request_slots_rep[0, self.slot_set[slot]] = 1.0
 
         ########################################################################
         #   Creat bag of filled_in slots based on the current_slots
         ########################################################################
-        current_slots_rep = np.zeros((1, self.slot_cardinality))
+        current_slots_rep = np.zeros((1, 50))#self.slot_cardinality))
         for slot in current_slots['inform_slots']:
-            current_slots_rep[0, self.slot_set[slot]] = 1.0
+            current_slots_rep[0] += glove.word_vec(slot)
+            #current_slots_rep[0, self.slot_set[slot]] = 1.0
 
         ########################################################################
         #   Encode last agent act
@@ -110,18 +114,20 @@ class AgentDQN(Agent):
         ########################################################################
         #   Encode last agent inform slots
         ########################################################################
-        agent_inform_slots_rep = np.zeros((1, self.slot_cardinality))
+        agent_inform_slots_rep = np.zeros((1, 50))#self.slot_cardinality))
         if agent_last:
             for slot in agent_last['inform_slots'].keys():
-                agent_inform_slots_rep[0,self.slot_set[slot]] = 1.0
+                agent_inform_slots_rep[0] += glove.word_vec(slot)
+                #agent_inform_slots_rep[0,self.slot_set[slot]] = 1.0
 
         ########################################################################
         #   Encode last agent request slots
         ########################################################################
-        agent_request_slots_rep = np.zeros((1, self.slot_cardinality))
+        agent_request_slots_rep = np.zeros((1, 50))##self.slot_cardinality))
         if agent_last:
             for slot in agent_last['request_slots'].keys():
-                agent_request_slots_rep[0,self.slot_set[slot]] = 1.0
+                agent_request_slots_rep[0] += glove.word_vec(slot)
+                #agent_request_slots_rep[0,self.slot_set[slot]] = 1.0
         
         turn_rep = np.zeros((1,1)) + state['turn'] / 10.
 
@@ -148,9 +154,11 @@ class AgentDQN(Agent):
                 kb_binary_rep[0, self.slot_set[slot]] = np.sum( kb_results_dict[slot] > 0.)
 
         self.final_representation = np.hstack([user_act_rep, user_inform_slots_rep, user_request_slots_rep, agent_act_rep, agent_inform_slots_rep, agent_request_slots_rep, current_slots_rep, turn_rep, turn_onehot_rep, kb_binary_rep, kb_count_rep])
-        state = np.zeros((1, 300))
+        state = np.zeros((1, self.final_representation.shape[1]))
         state[0, 0:self.final_representation.shape[1]] = self.final_representation
         self.final_representation = state
+        if self.first:
+            self.first = False
         return self.final_representation
       
     def run_policy(self, representation):
