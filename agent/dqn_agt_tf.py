@@ -28,7 +28,7 @@ class DQNAgentTF(AgentDQN):
         
         self.max_turn = params['max_turn'] + 4
         #self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
-        self.state_dimension = 118
+        self.state_dimension = 300
 
         
         self.transfer = transfer
