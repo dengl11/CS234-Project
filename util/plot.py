@@ -40,7 +40,24 @@ def draw_learning_curve(numbers, size = (16, 8)):
     plt.grid(False)
 
     ax = plt.plot(numbers, 'r', lw=4)
-    # plt.plot(numbers['x'], numbers['success_rate'], 'r', lw=1)
+    plt.show()
+
+
+def draw_transfer_curve(c1, c2,  size = (16, 8)):
+    """ draw the learning curve """
+    hfont = {'fontsize':24}
+    plt.figure(figsize=size)
+    plt.xlabel('Simulation Epoch', fontSize=18, labelpad=20)
+    plt.ylabel('Success Rate', fontSize=18, labelpad=20)
+    
+    plt.title('Comparison between Transfer Learning and Raw Learning',**hfont, y=1.1)
+    plt.xticks(fontsize = 16)
+    plt.yticks(fontsize = 16)
+    plt.grid(False)
+
+    ax = plt.plot(c1, 'r', lw=4)
+    ax = plt.plot(c2, 'b', lw=4)
+    plt.legend(["Transfer Learning Curve", "Raw Model Learning Curve"])
     plt.show()
 
 
