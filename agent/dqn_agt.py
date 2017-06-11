@@ -71,7 +71,15 @@ class AgentDQN(Agent):
         current_slots = state['curr_slots']
         kb_results_dict = state['kb_results']
         agent_last = state['agent_action']
-        
+        print("state.keys: ", state.keys())
+        print("user action:", user_action) 
+        print("agent action:", state["agent_action"]) 
+        print("current_slots:", current_slots) 
+        print("kb_results_dict:", kb_results_dict) 
+        print("agent_last:", agent_last) 
+        print("turn: ", state["turn"])
+        print("history: ", state["history"])
+        print("------------")
         ########################################################################
         #   Create one-hot of acts to represent the current user action
         ########################################################################
