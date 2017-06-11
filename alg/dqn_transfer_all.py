@@ -210,6 +210,6 @@ class DQNTF_all(object):
 
     def load(self, path):
         all_vars = tf.trainable_variables()
-        saver = tf.train.Saver([v for v in all_vars if v.name not in ["W2, b2"]])
+        saver = tf.train.Saver([v for v in all_vars if v.name[v.name.find("/")+1:v.name.find(":")] not in ["Variable_2", "Variable_3"]])
         saver.restore(self.sess, path)
 

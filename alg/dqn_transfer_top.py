@@ -79,7 +79,7 @@ class DQNTF_top(object):
         trainable_var_key = tf.GraphKeys.TRAINABLE_VARIABLES
         optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate, beta1 = self.beta)
         xs = tf.get_collection(key=trainable_var_key, scope=scope)
-        xs = [x for x in xs if x.name in ["W2", "b2"]]
+        xs = [x for x in xs if x.name[x.name.find("/")+1:x.name.find(":")] in ["Variable_2", "Variable_3"]]
         with tf.variable_scope("loss"):
             grad_var_list = optimizer.compute_gradients(self.loss, xs)
             gradients = [x[0] for x in grad_var_list]
@@ -210,7 +210,9 @@ class DQNTF_top(object):
         self.saver.save(self.sess, self.config.model_output)
 
     def load(self, path):
+        print("## daniter")
         all_vars = tf.trainable_variables()
-        saver = tf.train.Saver([v for v in all_vars if v.name not in ["W2, b2"]])
+        print(all_vars) 
+        saver = tf.train.Saver([v for v in all_vars if v.name[v.name.find("/")+1:v.name.find(":")] not in ["Variable_2", "Variable_3"]])
         saver.restore(self.sess, path)
 
