@@ -1,5 +1,6 @@
 from alg import *
 from agent import *
+import glove
 
 class DQNAgentTF(AgentDQN):
     def __init__(self, movie_dict=None, act_set=None, slot_set=None, params=None, transfer=False, path=None):
@@ -28,8 +29,8 @@ class DQNAgentTF(AgentDQN):
         
         self.max_turn = params['max_turn'] + 4
         #self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
-        self.state_dimension = 300
-
+        self.state_dimension = 333
+        self.first = True
         
         self.transfer = transfer
         if self.transfer:

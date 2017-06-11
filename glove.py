@@ -7,7 +7,7 @@ with open('glove.6B.50d.txt', 'r') as f:
         glove[pieces[0]] = np.array([float(i) for i in pieces[1:]])
 
 def word_vec(word):
-    if glove[word]:
+    if word in glove:
         return glove[word]
     if word == "destination1":
         return glove["destination"]
