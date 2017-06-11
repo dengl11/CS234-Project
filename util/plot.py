@@ -50,14 +50,14 @@ def draw_transfer_curve(c1, c2,  size = (16, 8)):
     plt.xlabel('Simulation Epoch', fontSize=18, labelpad=20)
     plt.ylabel('Success Rate', fontSize=18, labelpad=20)
     
-    plt.title('Comparison between Transfer Learning and Raw Learning',**hfont, y=1.1)
+    plt.title('Comparison between Transfer Learning and Raw Model\n Flight -> Moive  |  warm start = 20',**hfont, y=1.1)
     plt.xticks(fontsize = 16)
     plt.yticks(fontsize = 16)
     plt.grid(False)
 
     ax = plt.plot(c1, 'r', lw=4)
     ax = plt.plot(c2, 'b', lw=4)
-    plt.legend(["Transfer Learning Curve", "Raw Model Learning Curve"])
+    plt.legend(["Transfer Learning Curve", "Raw Model Learning Curve "], fontsize = 20)
     plt.show()
 
 
