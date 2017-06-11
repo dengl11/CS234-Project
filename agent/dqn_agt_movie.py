@@ -12,6 +12,8 @@ class AgentDQN(Agent):
         self.act_set = act_set
         self.slot_set = slot_set
         self.act_cardinality = len(act_set.keys())
+        print(self.act_cardinality)
+
         self.slot_cardinality = len(slot_set.keys())
         
         self.feasible_actions = AgentConfig.feasible_actions
@@ -146,7 +148,7 @@ class AgentDQN(Agent):
                 kb_binary_rep[0, self.slot_set[slot]] = np.sum( kb_results_dict[slot] > 0.)
 
         self.final_representation = np.hstack([user_act_rep, user_inform_slots_rep, user_request_slots_rep, agent_act_rep, agent_inform_slots_rep, agent_request_slots_rep, current_slots_rep, turn_rep, turn_onehot_rep, kb_binary_rep, kb_count_rep])
-        return self.final_representation
+        return self.final_representation[:118]
       
     def run_policy(self, representation):
         """ 

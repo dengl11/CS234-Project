@@ -8,8 +8,10 @@ class DQNAgentTF(AgentDQN):
         self.slot_set = slot_set
         self.act_cardinality = len(act_set.keys())
         self.slot_cardinality = len(slot_set.keys())
+        print("act_cardinality ", self.act_cardinality)
         
         self.feasible_actions = AgentConfig.feasible_actions
+        print("feasible_actions", len(self.feasible_actions))
         self.num_actions = len(self.feasible_actions)
         
         self.epsilon = params['epsilon']
@@ -29,9 +31,11 @@ class DQNAgentTF(AgentDQN):
         
         self.transfer = transfer
         if self.transfer:
-            self.model = DQNTF_all(self.state_dimension, self.hidden_size, self.num_actions, params, path=path)
+            #self.model = DQNTF_all(self.state_dimension, self.hidden_size, self.num_actions, params, path=path)
+            self.model = DQNTF_all(self.state_dimension, self.hidden_size, 43, params, path=path)
         else :
-            self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
+            # self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
+            self.model = DQNTF(self.state_dimension, self.hidden_size, 43, params)
 
         # self.dqn = DQN(self.state_dimension, self.hidden_size, self.num_actions)
         # self.clone_dqn = copy.deepcopy(self.dqn)
