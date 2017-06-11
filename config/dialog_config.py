@@ -12,8 +12,8 @@ Created on May 17, 2016
 #     'request':['moviename', 'starttime', 'theater', 'city', 'state', 'date', 'genre', 'ticket', 'numberofpeople']
 # }
 
-sys_request_slots = ['moviename', 'destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
-sys_inform_slots = ['destination1', 'moviename', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'taskcomplete', 'ticket']
+sys_request_slots = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers']
+sys_inform_slots = ['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'taskcomplete', 'ticket']
 start_dia_acts = {
     'request':['destination1', 'flightDate2', 'flightDate1', 'origin1', 'travelers', 'ticket']
     }
