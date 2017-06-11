@@ -5,3 +5,5 @@ data/trained_model/
 data/dstc2_traindev/
 */__pycache__/*
 trained_model/*
+glove.6B.*
+*swp
