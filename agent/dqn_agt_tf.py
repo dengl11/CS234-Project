@@ -2,7 +2,7 @@ from alg import *
 from agent import *
 
 class DQNAgentTF(AgentDQN):
-    def __init__(self, movie_dict=None, act_set=None, slot_set=None, params=None):
+    def __init__(self, movie_dict=None, act_set=None, slot_set=None, params=None, transfer=False, path=None):
         self.movie_dict = movie_dict
         self.act_set = act_set
         self.slot_set = slot_set
@@ -27,8 +27,12 @@ class DQNAgentTF(AgentDQN):
         self.max_turn = params['max_turn'] + 4
         self.state_dimension = 2 * self.act_cardinality + 7 * self.slot_cardinality + 3 + self.max_turn
         
-        self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
-        
+        self.transfer = transfer
+        if self.transfer:
+            self.model = DQNTF_all(self.state_dimension, self.hidden_size, self.num_actions, params, path=path)
+        else :
+            self.model = DQNTF(self.state_dimension, self.hidden_size, self.num_actions, params)
+
         # self.dqn = DQN(self.state_dimension, self.hidden_size, self.num_actions)
         # self.clone_dqn = copy.deepcopy(self.dqn)
         self.cur_bellman_err = 0
