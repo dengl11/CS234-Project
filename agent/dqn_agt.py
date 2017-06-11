@@ -147,6 +147,18 @@ class AgentDQN(Agent):
                 kb_binary_rep[0, self.slot_set[slot]] = np.sum( kb_results_dict[slot] > 0.)
 
         self.final_representation = np.hstack([user_act_rep, user_inform_slots_rep, user_request_slots_rep, agent_act_rep, agent_inform_slots_rep, agent_request_slots_rep, current_slots_rep, turn_rep, turn_onehot_rep, kb_binary_rep, kb_count_rep])
+        #  print("state final rep: ", (self.final_representation[0]))
+        print("user_act_rep: ", user_act_rep.shape)
+        print("user_inform_slots_rep: ", user_inform_slots_rep.shape)
+        print("user_request_slots_rep: ", user_request_slots_rep.shape)
+        print("agent_act_rep: ", agent_act_rep.shape)
+        print("agent_inform_slots_rep: ", agent_inform_slots_rep.shape)
+        print("agent_request_slots_rep: ", agent_request_slots_rep.shape)
+        print("current_slots_rep: ", current_slots_rep.shape)
+        print("turn_rep: ", turn_rep.shape)
+        print("turn_onehot_rep: ", turn_onehot_rep.shape)
+        print("kb_binary_rep: ", kb_binary_rep.shape)
+        print("kb_count_rep: ", kb_count_rep.shape)
         return self.final_representation
       
     def run_policy(self, representation):
